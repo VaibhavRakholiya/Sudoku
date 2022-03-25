@@ -14,20 +14,20 @@ public class Sudoku : MonoBehaviour
     private void Awake()
     {
 		instance = this;
-    }
-	private void Start()
-	{
 		N = 9;
-		K = 50;
-
-        mat = new int[N, N];
-        mat2 = new int[N, N];
-        // Compute square root of N
-        double SRNd = Mathf.Sqrt(N);
+		K = 25;
+		mat = new int[N, N];
+		mat2 = new int[N, N];
+		// Compute square root of N
+		double SRNd = Mathf.Sqrt(N);
 		SRN = (int)SRNd;
 		//sudoku = new Sudoku(N, K);
 		fillValues();
 		printSudoku();
+	}
+	private void Start()
+	{
+		
 	}
 	// Sudoku Generator
 	public void fillValues()

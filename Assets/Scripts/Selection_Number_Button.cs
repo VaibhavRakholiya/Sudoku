@@ -20,6 +20,5 @@ public class Selection_Number_Button : MonoBehaviour
     private void handle_onClick_FillCurrentButton()
     {
         UI_Manager.instance.CurrentButton.SetCurrentNumber(index + 1);
-      
     }
 }
