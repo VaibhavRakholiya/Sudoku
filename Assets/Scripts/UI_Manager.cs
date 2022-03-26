@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_Manager : MonoBehaviour
@@ -20,9 +21,12 @@ public class UI_Manager : MonoBehaviour
     public GameObject NewGame_Panel;
     public GameObject GameOver_Panel;
     public Button Notes_Button;
+    [Header("RectTransforms")]
+    public RectTransform[] NotesTextTransforms;
     private void Awake()
     {
         instance = this;
+        Difficutly_Text.text = PlayerPrefs.GetString("Mode");
     }
     private void Update()
     {
@@ -78,5 +82,13 @@ public class UI_Manager : MonoBehaviour
         StartCoroutine(GameManager.instance.HighLightOff());
         GameManager.instance.Undo(CurrentButton);
     }
-
+    public void handle_OnClick_Close_NewPanelButton()
+    {
+        NewGame_Panel.SetActive(false);
+    }
+    public void handle_OnClick_setMode(string mode)
+    {
+        PlayerPrefs.SetString("Mode", mode);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }

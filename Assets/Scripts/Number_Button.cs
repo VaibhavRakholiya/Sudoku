@@ -17,49 +17,60 @@ public class Number_Button : MonoBehaviour
         int index = this.transform.GetSiblingIndex();
         index_i = index / 9;
         index_j = index % 9;
+
         MainText = this.transform.GetChild(0).GetComponent<Text>();
         Notes_Text = this.transform.GetChild(1).GetComponent<Text>();
     }
     void Start()
     {
-        if(Sudoku.instance.mat2[index_i,index_j]!=-1)
-        {
-            button.enabled = false;
-        }
-        else
-        {
+        
             button.onClick.AddListener(handle_onClick_SelectButton);
-        }
     }
     private void handle_onClick_SelectButton()
     {
-        UI_Manager.instance.CurrentButton = this;
-        if(GameManager.instance.isHighlightOn)
+        if(Current_Number==-1)
         {
-            StartCoroutine(GameManager.instance.HighLightOff());
-            Invoke("HighLight", 0.30f);
+            UI_Manager.instance.CurrentButton = this;
+            if (GameManager.instance.isHighlightOn)
+            {
+                StartCoroutine(GameManager.instance.HighLightOff());
+                Invoke("HighLight", 0.30f);
+            }
+            else
+            {
+                HighLight();
+            }
         }
         else
         {
-            HighLight();
+            if (GameManager.instance.isHighlightOn)
+                StartCoroutine(GameManager.instance.HighLightOff());
+            StartCoroutine(GameManager.instance.HighLightAllNumber(Current_Number));
         }
+     
     }
    
    private void HighLight()
     {
         StartCoroutine(GameManager.instance.HighLightOn(index_i, index_j));
     }
-    public void ToggleHighLight(bool status)
+    public void ToggleHighLight(int index)
     {
-        if(status)
+        if(index==-1)
+        {
+            GetComponent<Animator>().SetBool("Animate2", true);
+            ishighlighted = false;
+     
+        }
+        else if(index==0)
         {
             GetComponent<Animator>().SetBool("Animate", true);
             ishighlighted = true;
         }
-        else
+        else if(index==1)
         {
-            GetComponent<Animator>().SetBool("Animate2", true);
-            ishighlighted = false;
+            GetComponent<Animator>().SetBool("Animate3", true);
+            ishighlighted = true;
         }
     }
     public void ChangeStateNotesText(bool state)
@@ -76,11 +87,12 @@ public class Number_Button : MonoBehaviour
         StartCoroutine(GameManager.instance.HighLightOff());
         if(!GameManager.instance.isPencilOn)
         {
-            Current_Number = number;
-            this.transform.GetChild(0).GetComponent<Text>().text = number.ToString();
-            this.transform.GetChild(1).gameObject.SetActive(false);
+            setNumber(number);
+            StartCoroutine(GameManager.instance.HighLightAllNumber(number));
+            //ToggleHighLight(true);
             if (Sudoku.instance.mat[index_i ,index_j] == number)
             {
+                UI_Manager.instance.CurrentButton = null;
                 Vibration.Vibrate(25);
                 button.enabled = false;
                 this.setColor(UI_Manager.instance.Green);
@@ -88,8 +100,10 @@ public class Number_Button : MonoBehaviour
             }
             else
             {
+                UI_Manager.instance.CurrentButton = null;
                 Vibration.Vibrate(100);
                 this.setColor(UI_Manager.instance.Red);
+                Current_Number = -1;
                 UI_Manager.instance.IncreaseMistakes();
                 AudioManager.instance.Play(1);
             }
@@ -100,6 +114,12 @@ public class Number_Button : MonoBehaviour
             GameManager.instance.AddToUndoList(this);
         }
     }
+    public void setNumber(int number)
+    {
+        Current_Number = number;
+        MainText.text = number.ToString();
+        Notes_Text.gameObject.SetActive(false);
+    }
     public void setColor(Color _color)
     {
         this.transform.GetChild(0).GetComponent<Text>().color = _color;
@@ -108,6 +128,11 @@ public class Number_Button : MonoBehaviour
     {
         Notes_Text.gameObject.SetActive(true);
         Notes_Text.text = Text;
+    }
+    public void setNotesTextPosition(int i,int j)
+    {
+        int index = (i*3)+j;
+        Notes_Text.rectTransform.localPosition = UI_Manager.instance.NotesTextTransforms[index].localPosition;
     }
     public void ClearNotesText()
     {

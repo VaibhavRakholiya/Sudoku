@@ -15,20 +15,31 @@ public class Sudoku : MonoBehaviour
     {
 		instance = this;
 		N = 9;
-		K = 25;
+		SetKValue();
 		mat = new int[N, N];
 		mat2 = new int[N, N];
 		// Compute square root of N
 		double SRNd = Mathf.Sqrt(N);
 		SRN = (int)SRNd;
+		
+	}
+    private void Start()
+    {
 		//sudoku = new Sudoku(N, K);
 		fillValues();
 		printSudoku();
+		GameManager.instance.setNotesTextPosition();
 	}
-	private void Start()
-	{
-		
-	}
+    private void SetKValue()
+    {
+		switch(PlayerPrefs.GetString("Mode"))
+        {
+			case "Easy": K = 30;break;
+			case "Medium": K = 35;break;
+			case "Hard": K = 40;break;
+			case "Expert": K = 45;break;
+        }
+    }
 	// Sudoku Generator
 	public void fillValues()
 	{
@@ -191,10 +202,11 @@ public class Sudoku : MonoBehaviour
             {
 				if(mat2[i,j]!=-1)
                 {
-					UI_Manager.instance.AllButtons.transform.GetChild((i * 9) + j).transform.GetChild(0).GetComponent<Text>().text = mat[i, j].ToString();
+					GameManager.instance.GetButtonById(i, j).setNumber(mat[i, j]);
 				}
 				else
                 {
+					GameManager.instance.GetButtonById(i, j).Current_Number = -1;
 					UI_Manager.instance.AllButtons.transform.GetChild((i * 9) + j).transform.GetChild(0).GetComponent<Text>().text = "";
 				}
 			}

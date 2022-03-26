@@ -62,9 +62,10 @@
     <Compile Include="Assets/Scripts/Sudoku.cs" />
     <Compile Include="Assets/Scripts/Number_Animation2.cs" />
     <Compile Include="Assets/Scripts/GameManager.cs" />
+    <Compile Include="Assets/Scripts/AudioManager.cs" />
     <Compile Include="Assets/Scripts/Selection_Number_Button.cs" />
     <Compile Include="Assets/Scripts/Number_Button.cs" />
-    <Compile Include="Assets/Scripts/AudioManager.cs" />
+    <Compile Include="Assets/Scripts/Number_Animation3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Fonts/Roboto/LICENSE.txt" />
