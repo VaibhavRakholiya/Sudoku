@@ -28,7 +28,7 @@ public class Number_Button : MonoBehaviour
     }
     private void handle_onClick_SelectButton()
     {
-        if(Current_Number==-1)
+        if(Current_Number==-1 && GameManager.instance.GameState==GameManager.State.Play)
         {
             UI_Manager.instance.CurrentButton = this;
             if (GameManager.instance.isHighlightOn)
@@ -41,7 +41,7 @@ public class Number_Button : MonoBehaviour
                 HighLight();
             }
         }
-        else
+        else if(GameManager.instance.GameState == GameManager.State.Play)
         {
             if (GameManager.instance.isHighlightOn)
                 StartCoroutine(GameManager.instance.HighLightOff());
@@ -93,7 +93,8 @@ public class Number_Button : MonoBehaviour
             if (Sudoku.instance.mat[index_i ,index_j] == number)
             {
                 UI_Manager.instance.CurrentButton = null;
-                Vibration.Vibrate(25);
+                if (PlayerPrefs.GetString("Vibrate") == "ON")
+                    Vibration.Vibrate(25);
                 button.enabled = false;
                 this.setColor(UI_Manager.instance.Green);
                 AudioManager.instance.Play(0);
@@ -101,10 +102,11 @@ public class Number_Button : MonoBehaviour
             else
             {
                 UI_Manager.instance.CurrentButton = null;
+                if (PlayerPrefs.GetString("Vibrate")=="ON") 
                 Vibration.Vibrate(100);
                 this.setColor(UI_Manager.instance.Red);
                 Current_Number = -1;
-                UI_Manager.instance.IncreaseMistakes();
+                UI_Manager.instance.IncreaseMistakes(1);
                 AudioManager.instance.Play(1);
             }
         }
