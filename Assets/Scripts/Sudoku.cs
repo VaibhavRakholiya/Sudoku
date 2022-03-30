@@ -177,6 +177,7 @@ public class Sudoku : MonoBehaviour
 	public void removeKDigits()
 	{
 		int count = K;
+		GameManager.instance.setRemainingSquares(K);
 		while (count != 0)
 		{
 			int cellId = randomGenerator(N * N) - 1;
@@ -212,6 +213,10 @@ public class Sudoku : MonoBehaviour
 			}
 		}
 	}
+	public int getBoardNumber(int i,int j)
+    {
+		return mat[i, j];
+    }
 
    
 }

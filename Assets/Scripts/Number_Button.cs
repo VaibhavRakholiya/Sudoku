@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using RDG;
 
 public class Number_Button : MonoBehaviour
 {
@@ -92,18 +91,17 @@ public class Number_Button : MonoBehaviour
             //ToggleHighLight(true);
             if (Sudoku.instance.mat[index_i ,index_j] == number)
             {
-                UI_Manager.instance.CurrentButton = null;
-                if (PlayerPrefs.GetString("Vibrate") == "ON")
-                    Vibration.Vibrate(25);
-                button.enabled = false;
                 this.setColor(UI_Manager.instance.Green);
+                UI_Manager.instance.CurrentButton = null;
+                Current_Number = number;
+                GameManager.instance.Vibrate(25);
+                GameManager.instance.ReduceRemainingSquares();
                 AudioManager.instance.Play(0);
             }
             else
             {
                 UI_Manager.instance.CurrentButton = null;
-                if (PlayerPrefs.GetString("Vibrate")=="ON") 
-                Vibration.Vibrate(100);
+                GameManager.instance.Vibrate(100);
                 this.setColor(UI_Manager.instance.Red);
                 Current_Number = -1;
                 UI_Manager.instance.IncreaseMistakes(1);
@@ -112,6 +110,7 @@ public class Number_Button : MonoBehaviour
         }
         else
         {
+            GameManager.instance.Vibrate(25);
             SetNotesText(number.ToString());
             GameManager.instance.AddToUndoList(this);
         }
@@ -141,5 +140,9 @@ public class Number_Button : MonoBehaviour
         Notes_Text.gameObject.SetActive(false);
         button.interactable = false;
         button.interactable = true;
+    }
+    public void Animate(string name)
+    {
+        this.GetComponent<Animator>().SetBool(name, true);
     }
 }
